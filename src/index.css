@@ -6,238 +6,255 @@
 }
 
 body {
-  background-color: #0d0806; /* Fondo casi negro/marrón oscuro profundo */
+  background-color: #050308; /* Oscuro profundo */
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(13, 148, 136, 0.15), transparent 25%);
   font-family: 'Almendra', serif;
   color: #e6dfd3;
   overflow-x: hidden;
 }
 
-/* --- ESTANTERÍA --- */
+/* --- ESTANTERÍA MÍSTICA --- */
 .bookshelf-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 30px 15px;
+  padding: 40px 15px;
   min-height: 100vh;
 }
 
 .shelf-title {
   font-family: 'Cinzel Decorative', serif;
-  color: #c9a054; /* Dorado viejo */
-  text-shadow: 0 0 12px rgba(201, 160, 84, 0.4);
-  margin-bottom: 50px;
+  color: #e2c073;
+  text-shadow: 0 0 15px rgba(226, 192, 115, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
+  margin-bottom: 60px;
   text-align: center;
-  font-size: 24px;
+  font-size: 28px;
+  letter-spacing: 2px;
 }
 
 .shelf {
   width: 100%;
-  max-width: 500px;
-  background: linear-gradient(to bottom, #3a2218, #1f110b);
-  border-bottom: 16px solid #140b07;
-  border-radius: 4px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-  padding: 20px 15px;
+  max-width: 600px;
+  background: linear-gradient(to bottom, #2a161f, #11070c);
+  border: 2px solid #3d2430;
+  border-bottom: 25px solid #0a0407;
+  border-radius: 8px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9), inset 0 5px 15px rgba(255, 255, 255, 0.05);
+  padding: 25px 20px;
   display: flex;
-  gap: 15px;
+  gap: 20px;
   align-items: flex-end;
-  min-height: 160px;
-  margin-bottom: 40px;
-}
-
-/* --- LIBROS --- */
-.book {
-  width: 75px;
-  height: 120px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 2px 4px 4px 2px;
+  min-height: 200px;
+  margin-bottom: 50px;
   position: relative;
 }
 
-.book:hover {
-  transform: translateY(-12px) scale(1.05);
+/* Adornos de la estantería */
+.shelf::before, .shelf::after {
+  content: "✧";
+  position: absolute;
+  bottom: -20px;
+  color: #5c404c;
+  font-size: 24px;
+}
+.shelf::before { left: 10px; }
+.shelf::after { right: 10px; }
+
+/* --- LIBROS (MAXIMALISTAS) --- */
+.book {
+  width: 90px;
+  height: 140px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  border-radius: 4px 8px 8px 4px;
 }
 
-/* Estilo del Grimorio Principal */
+.book:hover {
+  transform: translateY(-20px) scale(1.1);
+  z-index: 10;
+}
+
+/* Grimorio Principal - Estilo Bruja/Hada Oscura */
 .book.grimoire {
-  background: linear-gradient(135deg, #4a0d0d, #240505); /* Cuero carmesí oscuro */
-  border-left: 7px solid #c9a054; /* Lomo dorado */
-  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.5);
+  background: radial-gradient(circle at center, #4a0d2a, #1a020b);
+  border: 4px ridge #d4af37;
+  border-left: 10px solid #8b6914;
+  box-shadow: 
+    -5px 5px 15px rgba(0,0,0,0.8), 
+    0 0 20px rgba(180, 20, 80, 0.5),
+    inset 0 0 10px rgba(0,0,0,0.8);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.book.grimoire::after {
-  content: "✨";
-  font-size: 18px;
+.book.grimoire::before {
+  content: "";
+  position: absolute;
+  top: 5px; left: 5px; right: 5px; bottom: 5px;
+  border: 1px dashed #d4af37;
+  pointer-events: none;
 }
 
-/* Libros agregados desde el celular */
+.book.grimoire::after {
+  content: "FA";
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 22px;
+  color: #d4af37;
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+}
+
+/* Libros de la memoria - Estilo Ciber-Místico */
 .book.user-file {
-  background: linear-gradient(135deg, #2c3e50, #1a252f); /* Azul/Gris oscuro texturizado */
-  border-left: 5px solid #bdc3c7;
-  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.5);
-  padding: 10px 5px;
-  overflow: hidden;
+  background: linear-gradient(135deg, #111827, #030712);
+  border: 3px groove #38bdf8;
+  border-left: 8px solid #0284c7;
+  box-shadow: -4px 4px 12px rgba(0,0,0,0.8), 0 0 15px rgba(56, 189, 248, 0.3);
+  padding: 15px 5px;
+  display: flex;
+  align-items: center;
 }
 
 .book-text-title {
-  font-size: 10px;
-  color: #ecf0f1;
+  font-size: 11px;
+  color: #e0f2fe;
   text-align: center;
   word-break: break-word;
-  line-height: 1.1;
+  font-family: 'Cinzel Decorative', serif;
 }
 
-/* --- BOTÓN MÁSTICO --- */
 .magic-upload-btn {
-  background-color: #2e112d; /* Púrpura brujo */
-  color: #c9a054;
-  padding: 12px 24px;
-  border: 1px solid #c9a054;
-  border-radius: 30px;
-  font-family: 'Almendra', serif;
-  font-size: 16px;
+  background: linear-gradient(45deg, #4c1d95, #2e1065);
+  color: #d8b4fe;
+  padding: 12px 25px;
+  border: 2px solid #a855f7;
+  border-radius: 4px;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
-.magic-upload-btn:hover {
-  background-color: #421941;
-  box-shadow: 0 0 15px rgba(201, 160, 84, 0.4);
-}
-
-/* --- EL GRIMORIO ABIERTO (PANTALLA COMPLETA) --- */
-.book-modal {
+/* --- INTERFAZ DEL LIBRO ABIERTO (CON ÍNDICE LATERAL) --- */
+.reader-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(10, 6, 4, 0.96);
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  padding: 10px;
 }
 
 .close-btn {
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: 15px; right: 20px;
   background: none;
   border: none;
-  color: #c9a054;
-  font-size: 24px;
+  color: #e2c073;
+  font-size: 28px;
   cursor: pointer;
+  text-shadow: 0 0 10px #e2c073;
 }
 
-.grimorio-abierto {
-  width: 100%;
-  max-width: 650px;
-  height: 82vh;
-  background-color: #f3eade; /* Pergamino viejo */
-  background-image: radial-gradient(rgba(0,0,0,0.04) 15%, transparent 16%);
-  background-size: 4px 4px;
-  color: #2b1a11;
+.book-open-container {
+  width: 95%;
+  max-width: 1000px;
+  height: 85vh;
+  display: flex;
+  background: #fdf6e3;
   border-radius: 4px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 40px rgba(139, 90, 43, 0.15);
-  border: 2px solid #3a2218;
+  box-shadow: 0 0 50px rgba(212, 175, 55, 0.2);
+  border: 6px ridge #8b6914;
+}
+
+/* Barra lateral oscura y recargada */
+.book-sidebar {
+  width: 250px;
+  background: #1a0f14;
+  border-right: 4px groove #8b6914;
+  padding: 20px 10px;
+  color: #e2c073;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-}
-
-.grimorio-header {
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px dashed rgba(58, 34, 24, 0.3);
-}
-
-.grimorio-header h2 {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: 18px;
-  color: #5c1414;
-}
-
-.grimorio-body {
-  flex: 1;
-  padding: 20px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
-.spell-entry {
-  padding-bottom: 15px;
-  border-bottom: 1px dotted #8b5a2b;
-  font-size: 15px;
-  line-height: 1.4;
-  white-space: pre-wrap;
+.sidebar-title {
+  font-family: 'Cinzel Decorative', serif;
+  text-align: center;
+  font-size: 18px;
+  margin-bottom: 20px;
+  border-bottom: 2px dashed #8b6914;
+  padding-bottom: 10px;
 }
 
-.spell-img {
-  width: 100%;
-  max-width: 100%;
-  border-radius: 4px;
-  margin-top: 10px;
-  border: 1px solid rgba(58, 34, 24, 0.2);
-  box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
-}
-
-/* --- FORMULARIO DE HECHIZOS --- */
-.grimorio-footer {
-  padding: 15px;
-  background-color: rgba(58, 34, 24, 0.04);
-  border-top: 1px dashed rgba(58, 34, 24, 0.3);
+.category-list {
+  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.grimorio-footer textarea {
-  width: 100%;
-  height: 70px;
-  background: transparent;
-  border: 1px dashed #5c1414;
+.category-item {
   padding: 10px;
-  font-family: 'Almendra', serif;
-  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: 0.3s;
+  font-size: 16px;
+}
+
+.category-item:hover, .category-item.active {
+  border-color: #8b6914;
+  background: rgba(139, 105, 20, 0.2);
+  border-radius: 4px;
+  text-shadow: 0 0 5px #e2c073;
+}
+
+/* Área de lectura (Pergamino) */
+.book-content-area {
+  flex: 1;
+  background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+  background-color: #e8dcc4;
+  padding: 30px;
   color: #2b1a11;
-  resize: none;
-  border-radius: 4px;
-}
-
-.grimorio-footer textarea:focus {
-  outline: none;
-  border-style: solid;
-}
-
-.action-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
-.icon-label {
-  cursor: pointer;
-  font-size: 20px;
-  padding: 5px 10px;
-  border-radius: 4px;
-  background: rgba(58, 34, 24, 0.1);
+.content-header {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 24px;
+  border-bottom: 2px solid #5c1414;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #4a0d0d;
 }
 
-.btn-add-spell {
-  background-color: #5c1414;
-  color: #f3eade;
+.pdf-viewer {
+  width: 100%;
+  height: 100%;
   border: none;
-  padding: 8px 16px;
-  font-family: 'Almendra', serif;
   border-radius: 4px;
-  cursor: pointer;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
+
+.spell-entry {
+  padding-bottom: 15px;
+  border-bottom: 1px dotted #8b5a2b;
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.spell-img {
+  max-width: 100%;
+  border: 4px solid #3d2430;
+  border-radius: 2px;
+  margin-top: 10px;
+}
+
