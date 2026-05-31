@@ -1,149 +1,202 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
+import { ReactReader } from 'react-reader';
+import localforage from 'localforage';
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [vistaActual, setVistaActual] = useState('estante'); 
+  const [cargando, setCargando] = useState(true); // Pantalla de carga mística
+  
+  // Categorías del Grimorio
+  const categoriasGrimorio = ['Diario Mágico', 'Hechizos', 'Pociones', 'Astrología', 'Ideas FA'];
+  const [categoriaActiva, setCategoriaActiva] = useState(categoriasGrimorio[0]);
   const [hechizos, setHechizos] = useState([]);
   const [nuevoHechizo, setNuevoHechizo] = useState('');
-  const [imagenB64, setImagenB64] = useState('');
+  
+  // Libros Externos y Lector
   const [librosExtras, setLibrosExtras] = useState([]);
+  const [libroAbierto, setLibroAbierto] = useState(null);
+  const [ubicacionEpub, setUbicacionEpub] = useState(null);
 
-  // Cargar datos guardados del almacenamiento interno al abrir la app
+  // 1. DESPERTAR EL GRIMORIO: Cargar datos guardados al abrir la app
   useEffect(() => {
-    const hechizosGuardados = localStorage.getItem('mis-hechizos');
-    if (hechizosGuardados) setHechizos(JSON.parse(hechizosGuardados));
+    const invocarMemoria = async () => {
+      try {
+        const hechizosGuardados = await localforage.getItem('fa-hechizos');
+        if (hechizosGuardados) setHechizos(hechizosGuardados);
 
-    const librosGuardados = localStorage.getItem('mis-libros-extras');
-    if (librosGuardados) setLibrosExtras(JSON.parse(librosGuardados));
+        const librosGuardados = await localforage.getItem('fa-libros');
+        if (librosGuardados) {
+          // Reconstruir las URLs para los archivos físicos guardados
+          const librosListos = librosGuardados.map(libro => ({
+            ...libro,
+            url: URL.createObjectURL(libro.archivo)
+          }));
+          setLibrosExtras(librosListos);
+        }
+      } catch (error) {
+        console.error("Interferencia al leer la memoria:", error);
+      }
+      setCargando(false);
+    };
+    invocarMemoria();
   }, []);
 
-  // Guardar hechizos automáticamente cuando cambian
-  const guardarEnStorage = (nuevosHechizos) => {
-    setHechizos(nuevosHechizos);
-    localStorage.setItem('mis-hechizos', JSON.stringify(nuevosHechizos));
-  };
-
-  // Agregar texto e imágenes al grimorio
-  const manejarAgregarHechizo = () => {
-    if (!nuevoHechizo.trim() && !imagenB64) return;
-
-    const nuevoItem = {
-      id: Date.now(),
-      texto: nuevoHechizo,
-      imagen: imagenB64 // Guarda la foto del celular aquí
-    };
-
-    const listaActualizada = [...hechizos, nuevoItem];
-    guardarEnStorage(listaActualizada);
-
-    // Limpiar campos del formulario
+  // 2. GUARDAR HECHIZOS PERMANENTEMENTE
+  const manejarAgregarHechizo = async () => {
+    if (!nuevoHechizo.trim()) return;
+    const nuevoItem = { id: Date.now(), categoria: categoriaActiva, texto: nuevoHechizo };
+    const nuevaLista = [...hechizos, nuevoItem];
+    
+    setHechizos(nuevaLista);
     setNuevoHechizo('');
-    setImagenB64('');
+    
+    // Sellar en la base de datos
+    await localforage.setItem('fa-hechizos', nuevaLista);
   };
 
-  // Procesar imágenes cargadas desde la galería del cel
-  const manejarImagen = (e) => {
+  // 3. GUARDAR LIBROS (PDF/EPUB) PERMANENTEMENTE
+  const manejarSubirLibro = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagenB64(reader.result);
+      const nombreMin = file.name.toLowerCase();
+      const esEpub = nombreMin.endsWith('.epub');
+      const esPdf = nombreMin.endsWith('.pdf');
+      
+      const nuevoLibroGuardar = {
+        id: Date.now(),
+        nombre: file.name,
+        esEpub: esEpub,
+        esPdf: esPdf,
+        archivo: file // Guardamos el archivo real en la base de datos, no la URL
       };
-      reader.readAsDataURL(file);
+
+      // Limpiamos los datos para guardarlos (sin la URL temporal que se rompe al cerrar la app)
+      const librosParaGuardar = [...librosExtras.map(l => ({id: l.id, nombre: l.nombre, esEpub: l.esEpub, esPdf: l.esPdf, archivo: l.archivo})), nuevoLibroGuardar];
+      await localforage.setItem('fa-libros', librosParaGuardar);
+
+      // Creamos la URL solo para mostrarlo ahora mismo
+      const nuevoLibroMostrar = {
+        ...nuevoLibroGuardar,
+        url: URL.createObjectURL(file)
+      };
+      setLibrosExtras([...librosExtras, nuevoLibroMostrar]);
     }
   };
 
-  // Conjurar un nuevo libro en la estantería externa
-  const manejarSubirLibroEstante = (e) => {
-    const files = Array.from(e.target.files);
-    const nuevosLibros = files.map(file => ({
-      id: Date.now() + Math.random(),
-      nombre: file.name
-    }));
+  const hechizosFiltrados = hechizos.filter(h => h.categoria === categoriaActiva);
 
-    const listaLibrosActualizada = [...librosExtras, ...nuevosLibros];
-    setLibrosExtras(listaLibrosActualizada);
-    localStorage.setItem('mis-libros-extras', JSON.stringify(listaLibrosActualizada));
-  };
+  // Pantalla de carga mientras lee la base de datos
+  if (cargando) {
+    return <div style={{ color: '#e2c073', textAlign: 'center', marginTop: '40vh', fontFamily: 'Cinzel Decorative', fontSize: '24px' }}>Despertando la Magia...</div>;
+  }
 
   return (
     <div className="bookshelf-container">
-      <h1 className="shelf-title">Fada Artesana <br/>• Grimorio Antiguo •</h1>
-
-      {/* LA ESTANTERÍA MÍSTICA */}
-      <div className="shelf">
-        {/* Grimorio Principal */}
-        <div className="book grimoire" onClick={() => setIsOpen(true)} title="Abrir Grimorio"></div>
-        
-        {/* Libros dinámicos agregados desde el dispositivo */}
-        {librosExtras.map((libro) => (
-          <div key={libro.id} className="book user-file">
-            <div className="book-text-title">{libro.nombre.substring(0, 20)}</div>
+      
+      {/* VISTA 1: LA ESTANTERÍA */}
+      {vistaActual === 'estante' && (
+        <>
+          <h1 className="shelf-title">Biblioteca de las Sombras</h1>
+          <div className="shelf">
+            <div className="book grimoire" onClick={() => setVistaActual('grimorio')}></div>
+            
+            {librosExtras.map((libro) => (
+              <div 
+                key={libro.id} 
+                className="book user-file"
+                onClick={() => {
+                  setLibroAbierto(libro);
+                  setVistaActual('lectorExterno');
+                }}
+              >
+                <div className="book-text-title">{libro.nombre.substring(0, 15)}...</div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      {/* Botón para añadir libros a la estantería */}
-      <label htmlFor="upload-shelf" className="magic-upload-btn">
-        📂 Conjurar Libro al Estante
-      </label>
-      <input 
-        type="file" 
-        id="upload-shelf" 
-        multiple 
-        style={{ display: 'none' }} 
-        onChange={manejarSubirLibroEstante}
-      />
+          <label htmlFor="upload-shelf" className="magic-upload-btn">
+            ✦ Invocar Archivo (PDF/EPUB) ✦
+          </label>
+          <input type="file" id="upload-shelf" accept=".pdf,.epub,image/*" style={{ display: 'none' }} onChange={manejarSubirLibro} />
+        </>
+      )}
 
-      {/* EL GRIMORIO INTERACTIVO (PANTALLA COMPLETA) */}
-      {isOpen && (
-        <div className="book-modal">
-          <button className="close-btn" onClick={() => setIsOpen(false)}>✕ Cerrar</button>
-          
-          <div className="grimorio-abierto">
-            <div className="grimorio-header">
-              <h2>Libro de Sombras & Hechizos</h2>
+      {/* VISTA 2: EL GRIMORIO CON TEMAS */}
+      {vistaActual === 'grimorio' && (
+        <div className="reader-modal">
+          <button className="close-btn" onClick={() => setVistaActual('estante')}>✕</button>
+          <div className="book-open-container">
+            <div className="book-sidebar">
+              <h3 className="sidebar-title">Índice Mágico</h3>
+              <ul className="category-list">
+                {categoriasGrimorio.map(cat => (
+                  <li 
+                    key={cat} 
+                    className={`category-item ${categoriaActiva === cat ? 'active' : ''}`}
+                    onClick={() => setCategoriaActiva(cat)}
+                  >
+                    {cat}
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <div className="grimorio-body">
-              {hechizos.length === 0 ? (
-                <p style={{ textAlign: 'center', fontStyle: 'italic', opacity: 0.7 }}>
-                  El grimorio está en blanco. Escribe tu primer secreto abajo...
-                </p>
-              ) : (
-                hechizos.map((item) => (
-                  <div key={item.id} className="spell-entry">
-                    {item.texto && <p>{item.texto}</p>}
-                    {item.imagen && <img src={item.imagen} alt="Encantamiento" className="spell-img" />}
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Formulario de anotaciones */}
-            <div className="grimorio-footer">
-              <textarea 
-                placeholder="Escribe un nuevo encantamiento, poción o nota..."
-                value={nuevoHechizo}
-                onChange={(e) => setNuevoHechizo(e.target.value)}
-              />
-              
-              <div className="action-row">
-                <label htmlFor="upload-spell-img" className="icon-label" title="Añadir Imagen mística">
-                  📷 {imagenB64 ? "✓" : ""}
-                </label>
-                <input 
-                  type="file" 
-                  id="upload-spell-img" 
-                  accept="image/*" 
-                  style={{ display: 'none' }} 
-                  onChange={manejarImagen}
+            <div className="book-content-area">
+              <h2 className="content-header">{categoriaActiva}</h2>
+              <div style={{ flex: 1 }}>
+                {hechizosFiltrados.map(item => (
+                  <div key={item.id} className="spell-entry">{item.texto}</div>
+                ))}
+              </div>
+              <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
+                <textarea 
+                  style={{ width: '100%', height: '80px', background: 'transparent', border: '2px dashed #4a0d0d', padding: '10px', fontFamily: 'Almendra', color: '#2b1a11' }}
+                  placeholder={`Inscribe conocimiento en ${categoriaActiva}...`}
+                  value={nuevoHechizo}
+                  onChange={(e) => setNuevoHechizo(e.target.value)}
                 />
-
-                <button className="btn-add-spell" onClick={manejarAgregarHechizo}>
-                  Inscribir Hechizo
+                <button 
+                  onClick={manejarAgregarHechizo}
+                  style={{ background: '#4a0d0d', color: '#e2c073', border: 'none', padding: '10px 20px', cursor: 'pointer', fontFamily: 'Cinzel Decorative' }}
+                >
+                  Sellar
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VISTA 3: LECTOR DE LIBROS EXTERNOS (PDF / EPUB / IMÁGENES) */}
+      {vistaActual === 'lectorExterno' && libroAbierto && (
+        <div className="reader-modal">
+          <button className="close-btn" onClick={() => setVistaActual('estante')} style={{ zIndex: 9999 }}>✕</button>
+          <div className="book-open-container" style={{ position: 'relative' }}>
+            
+            <div className="book-content-area" style={{ padding: 0, backgroundColor: '#fff', width: '100%', height: '100%' }}>
+              
+              {libroAbierto.esEpub ? (
+                <div style={{ position: 'relative', height: '100%' }}>
+                  <ReactReader
+                    url={libroAbierto.url}
+                    title={libroAbierto.nombre}
+                    location={ubicacionEpub}
+                    locationChanged={(epubcifi) => setUbicacionEpub(epubcifi)}
+                    epubOptions={{ flow: 'scrolled', manager: 'continuous' }}
+                  />
+                </div>
+              ) : 
+              
+              libroAbierto.esPdf ? (
+                <iframe src={libroAbierto.url} className="pdf-viewer" title={libroAbierto.nombre} style={{ width: '100%', height: '100%', border: 'none' }}></iframe>
+              ) : 
+              
+              (
+                <div style={{ padding: '20px', textAlign: 'center', height: '100%', overflowY: 'auto' }}>
+                  <img src={libroAbierto.url} alt="Contenido" style={{ maxWidth: '100%' }} />
+                </div>
+              )}
+
             </div>
           </div>
         </div>
@@ -153,3 +206,4 @@ function App() {
 }
 
 export default App;
+        
