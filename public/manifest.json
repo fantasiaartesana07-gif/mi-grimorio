@@ -1,22 +1,22 @@
 {
-  "short_name": "Neófito",
-  "name": "Neófito: Biblioteca de Sangre",
+  "name": "Grimorio Digital",
+  "short_name": "Grimorio",
+  "description": "Tu biblioteca arcana personal",
+  "theme_color": "#0d0a1a",
+  "background_color": "#0d0a1a",
+  "display": "standalone",
+  "start_url": "/",
   "icons": [
     {
-      "src": "logo192.png",
-      "type": "image/png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "logo512.png",
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "maskable"
     }
-  ],
-  "start_url": "/",
-  "background_color": "#07040f",
-  "theme_color": "#07040f",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }
