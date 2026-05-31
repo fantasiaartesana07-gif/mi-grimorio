@@ -1,151 +1,243 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --void: #0d0a1a;
-  --deep: #13102a;
-  --shadow: #1e1840;
-  --mist: #2d2660;
-  --gold: #c9a84c;
-  --gold-dim: #8a6f2e;
-  --gold-glow: #f0c060;
-  --amethyst: #7b4fa6;
-  --amethyst-light: #a678cc;
-  --crimson: #8b1a2f;
-  --crimson-glow: #c0243f;
-  --silver: #b8b0d0;
-  --silver-dim: #6e6888;
-  --parchment: #e8dfc0;
+/* src/index.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-
-html, body { height: 100%; overflow: hidden; }
 
 body {
-  background-color: var(--void);
-  color: var(--silver);
-  font-family: 'IM Fell English', Georgia, serif;
-  -webkit-font-smoothing: antialiased;
+  background-color: #0d0806; /* Fondo casi negro/marrón oscuro profundo */
+  font-family: 'Almendra', serif;
+  color: #e6dfd3;
+  overflow-x: hidden;
 }
 
-#root { height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--void); }
-::-webkit-scrollbar-thumb { background: var(--amethyst); border-radius: 2px; }
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 20% 15%, rgba(201,168,76,0.6) 0%, transparent 100%),
-    radial-gradient(1px 1px at 80% 25%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 45% 70%, rgba(201,168,76,0.5) 0%, transparent 100%),
-    radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-    radial-gradient(1px 1px at 10% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    radial-gradient(1px 1px at 90% 60%, rgba(201,168,76,0.4) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 40% 30%, rgba(201,168,76,0.7) 0%, transparent 100%),
-    radial-gradient(1.5px 1.5px at 60% 50%, rgba(255,255,255,0.5) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(123,79,166,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 0% 100%, rgba(139,26,47,0.08) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.font-title   { font-family: 'Cinzel Decorative', serif; }
-.font-heading { font-family: 'Cinzel', serif; }
-
-.btn {
-  font-family: 'Cinzel', serif;
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
+/* --- ESTANTERÍA --- */
+.bookshelf-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  padding: 30px 15px;
+  min-height: 100vh;
 }
-.btn-gold {
-  background: linear-gradient(135deg, var(--gold-dim), var(--gold));
-  color: var(--void);
-  padding: 0.6rem 1.2rem;
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-}
-.btn-gold:hover { background: linear-gradient(135deg, var(--gold), var(--gold-glow)); box-shadow: 0 0 16px rgba(201,168,76,0.5); }
-.btn-ghost { background: transparent; color: var(--silver-dim); padding: 0.5rem 1rem; border: 1px solid var(--mist); }
-.btn-ghost:hover { color: var(--silver); border-color: var(--amethyst); }
-.btn-danger { background: transparent; color: var(--crimson-glow); padding: 0.4rem 0.8rem; border: 1px solid var(--crimson); font-size: 0.7rem; }
-.btn-danger:hover { background: rgba(139,26,47,0.2); }
 
-input, textarea, select {
-  font-family: 'IM Fell English', Georgia, serif;
-  background: rgba(19,16,42,0.8);
-  color: var(--parchment);
-  border: 1px solid var(--mist);
-  padding: 0.6rem 0.8rem;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
+.shelf-title {
+  font-family: 'Cinzel Decorative', serif;
+  color: #c9a054; /* Dorado viejo */
+  text-shadow: 0 0 12px rgba(201, 160, 84, 0.4);
+  margin-bottom: 50px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.shelf {
   width: 100%;
+  max-width: 500px;
+  background: linear-gradient(to bottom, #3a2218, #1f110b);
+  border-bottom: 16px solid #140b07;
+  border-radius: 4px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
+  padding: 20px 15px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  min-height: 160px;
+  margin-bottom: 40px;
 }
-input:focus, textarea:focus, select:focus { border-color: var(--amethyst); box-shadow: 0 0 8px rgba(123,79,166,0.3); }
-input::placeholder, textarea::placeholder { color: var(--silver-dim); font-style: italic; }
-select option { background: var(--deep); }
 
-.card {
-  background: linear-gradient(135deg, rgba(19,16,42,0.9), rgba(30,24,64,0.7));
-  border: 1px solid var(--mist);
+/* --- LIBROS --- */
+.book {
+  width: 75px;
+  height: 120px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 2px 4px 4px 2px;
   position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
 }
 
-.badge {
-  font-family: 'Cinzel', serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  padding: 0.2rem 0.6rem;
-  border: 1px solid currentColor;
-  text-transform: uppercase;
-  display: inline-block;
+.book:hover {
+  transform: translateY(-12px) scale(1.05);
 }
 
-.rune-divider {
+/* Estilo del Grimorio Principal */
+.book.grimoire {
+  background: linear-gradient(135deg, #4a0d0d, #240505); /* Cuero carmesí oscuro */
+  border-left: 7px solid #c9a054; /* Lomo dorado */
+  box-shadow: 4px 6px 12px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  color: var(--gold-dim);
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  margin: 0.5rem 0;
+  justify-content: center;
 }
-.rune-divider::before, .rune-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-dim)); }
-.rune-divider::after { background: linear-gradient(90deg, var(--gold-dim), transparent); }
 
-@keyframes flicker { 0%,100%{opacity:1} 92%{opacity:1} 93%{opacity:0.8} 94%{opacity:1} 96%{opacity:0.9} }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-@keyframes runeGlow { 0%,100%{text-shadow:0 0 4px var(--gold-dim)} 50%{text-shadow:0 0 12px var(--gold),0 0 24px rgba(201,168,76,0.4)} }
+.book.grimoire::after {
+  content: "✨";
+  font-size: 18px;
+}
 
-.animate-fade { animation: fadeIn 0.4s ease forwards; }
-.animate-float { animation: float 4s ease-in-out infinite; }
-.animate-flicker { animation: flicker 8s ease infinite; }
-.animate-rune-glow { animation: runeGlow 3s ease-in-out infinite; }
+/* Libros agregados desde el celular */
+.book.user-file {
+  background: linear-gradient(135deg, #2c3e50, #1a252f); /* Azul/Gris oscuro texturizado */
+  border-left: 5px solid #bdc3c7;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.5);
+  padding: 10px 5px;
+  overflow: hidden;
+}
+
+.book-text-title {
+  font-size: 10px;
+  color: #ecf0f1;
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.1;
+}
+
+/* --- BOTÓN MÁSTICO --- */
+.magic-upload-btn {
+  background-color: #2e112d; /* Púrpura brujo */
+  color: #c9a054;
+  padding: 12px 24px;
+  border: 1px solid #c9a054;
+  border-radius: 30px;
+  font-family: 'Almendra', serif;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+.magic-upload-btn:hover {
+  background-color: #421941;
+  box-shadow: 0 0 15px rgba(201, 160, 84, 0.4);
+}
+
+/* --- EL GRIMORIO ABIERTO (PANTALLA COMPLETA) --- */
+.book-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 6, 4, 0.96);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #c9a054;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.grimorio-abierto {
+  width: 100%;
+  max-width: 650px;
+  height: 82vh;
+  background-color: #f3eade; /* Pergamino viejo */
+  background-image: radial-gradient(rgba(0,0,0,0.04) 15%, transparent 16%);
+  background-size: 4px 4px;
+  color: #2b1a11;
+  border-radius: 4px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 0 40px rgba(139, 90, 43, 0.15);
+  border: 2px solid #3a2218;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.grimorio-header {
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px dashed rgba(58, 34, 24, 0.3);
+}
+
+.grimorio-header h2 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 18px;
+  color: #5c1414;
+}
+
+.grimorio-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.spell-entry {
+  padding-bottom: 15px;
+  border-bottom: 1px dotted #8b5a2b;
+  font-size: 15px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.spell-img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 4px;
+  margin-top: 10px;
+  border: 1px solid rgba(58, 34, 24, 0.2);
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+}
+
+/* --- FORMULARIO DE HECHIZOS --- */
+.grimorio-footer {
+  padding: 15px;
+  background-color: rgba(58, 34, 24, 0.04);
+  border-top: 1px dashed rgba(58, 34, 24, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grimorio-footer textarea {
+  width: 100%;
+  height: 70px;
+  background: transparent;
+  border: 1px dashed #5c1414;
+  padding: 10px;
+  font-family: 'Almendra', serif;
+  font-size: 14px;
+  color: #2b1a11;
+  resize: none;
+  border-radius: 4px;
+}
+
+.grimorio-footer textarea:focus {
+  outline: none;
+  border-style: solid;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon-label {
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: rgba(58, 34, 24, 0.1);
+}
+
+.btn-add-spell {
+  background-color: #5c1414;
+  color: #f3eade;
+  border: none;
+  padding: 8px 16px;
+  font-family: 'Almendra', serif;
+  border-radius: 4px;
+  cursor: pointer;
+}
